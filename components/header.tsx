@@ -14,7 +14,7 @@ export function Header() {
 
   const [check, setCheck] = useState<boolean>(false);
 
-  const [ completedTodo, setCompletedTodo ] = useState<boolean>(false)
+  const [ isCompletedTodo, setIsCompletedTodo ] = useState<boolean>(false)
 
   let [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -73,8 +73,8 @@ export function Header() {
     }
   };
 
-  const todoCompleted = () => {
-    setCompletedTodo(true)
+  const isTodoCompleted = () => {
+      setIsCompletedTodo(!isCompletedTodo)
 
   }
 
@@ -168,21 +168,21 @@ export function Header() {
                 : "bg-white text-darkgrayishblue"
             }`}
           >
-            {todoList.map((todoEl) => {
+            {todoList.map((todoEl, index) => {
               return (
-                <div className="todoList flex justify-start items-center space-x-4 p-3 w-full font-normal border-verylightgray">
+                <div className="todoList flex justify-start items-center space-x-4 p-3 w-full font-normal border-verylightgray" key={index}>
                   <div
                     className={`flex justify-center items-center rounded-full border w-5 h-5 cursor-pointer ${
-                      completedTodo === true ? "bg-green-400" : ""
+                      isCompletedTodo === true ? "bg-green-400" : ""
                     }`}
-                    onClick={todoCompleted}
+                    onClick={isTodoCompleted}
                   >
                     <Image
                       src="/icon-check.svg"
                       alt="check-icon"
                       width={11}
                       height={9}
-                      className={`${completedTodo === true ? "block" : "hidden"}`}
+                      className={`${isCompletedTodo === true ? "block" : "hidden"}`}
                     />
                   </div>
                   <p
