@@ -1,9 +1,10 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
+import { todo } from "node:test";
 import { Fragment, useEffect, useState } from "react";
 
-export function Header() {
+export function Todo() {
   const [screenModeState, setScreenModeState] = useState<"dark" | "light">(
     "light"
   );
@@ -14,9 +15,7 @@ export function Header() {
 
   const [check, setCheck] = useState<boolean>(false);
 
-  const [ isCompletedTodo, setIsCompletedTodo ] = useState<boolean>(false)
-
-  let [isOpen, setIsOpen] = useState<boolean>(true);
+  const [ isCompletedTask, setisCompletedTask ] = useState<boolean>(false)
 
   const bg = {
     darkDesktopBg: "/bg-desktop-dark.jpg",
@@ -53,15 +52,7 @@ export function Header() {
     setInputData(event.target.value);
   };
 
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  const addTodo = () => {
+  const addTask = () => {
     if (inputData !== "") {
       setTodoList((todoarr) => [...todoarr, inputData]);
       setInputData("");
@@ -73,8 +64,8 @@ export function Header() {
     }
   };
 
-  const isTodoCompleted = () => {
-      setIsCompletedTodo(!isCompletedTodo)
+  const isTaskCompleted = () => {
+      setisCompletedTask(!isCompletedTask)
 
   }
 
@@ -136,7 +127,7 @@ export function Header() {
               className={`flex justify-center items-center rounded-full border w-5 h-5 cursor-pointer ${
                 check === true ? "bg-blue-400" : ""
               }`}
-              onClick={addTodo}
+              onClick={addTask}
             >
               <Image
                 src="/icon-check.svg"
@@ -151,8 +142,9 @@ export function Header() {
               type="text"
               placeholder="Create a new todo..."
               value={inputData}
+              autoComplete="off"
               onChange={handleChange}
-              className={`focus:ring-none focus:border-none ${
+              className={`w-full focus:outline-none ${
                 screenModeState === "dark"
                   ? "bg-lightdark text-lightgrayishblue "
                   : "bg-white text-darkgrayishblue"
@@ -173,16 +165,16 @@ export function Header() {
                 <div className="todoList flex justify-start items-center space-x-4 p-3 w-full font-normal border-verylightgray" key={index}>
                   <div
                     className={`flex justify-center items-center rounded-full border w-5 h-5 cursor-pointer ${
-                      isCompletedTodo === true ? "bg-green-400" : ""
+                      isCompletedTask === true ? "bg-green-400" : ""
                     }`}
-                    onClick={isTodoCompleted}
+                    onClick={isTaskCompleted}
                   >
                     <Image
                       src="/icon-check.svg"
                       alt="check-icon"
                       width={11}
                       height={9}
-                      className={`${isCompletedTodo === true ? "block" : "hidden"}`}
+                      className={`${isCompletedTask === true ? "block" : "hidden"}`}
                     />
                   </div>
                   <p
