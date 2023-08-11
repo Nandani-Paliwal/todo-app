@@ -1,7 +1,7 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
-import { todo } from "node:test";
+import { MdCancel } from "react-icons/md";
 import { Fragment, useEffect, useState } from "react";
 
 export function Todo() {
@@ -11,11 +11,17 @@ export function Todo() {
 
   const [inputData, setInputData] = useState<string>("");
 
-  const [todoList, setTodoList] = useState<string[]>([]);
+  const [todoList, setTodoList] = useState<list[]>([]);
+
+  type list = {
+    id: number,
+    text: string,
+    completed: boolean
+  }
 
   const [check, setCheck] = useState<boolean>(false);
 
-  const [ isCompletedTask, setisCompletedTask ] = useState<boolean>(false)
+  const [isCompletedTask, setisCompletedTask] = useState<boolean>(false);
 
   const bg = {
     darkDesktopBg: "/bg-desktop-dark.jpg",
@@ -24,6 +30,7 @@ export function Todo() {
     lightDeskBg: "/bg-desktop-light.jpg",
   };
 
+  // mobile header
   const setMobileBgFunction = () => {
     if (screenModeState === "light") {
       return bg.lightMobileBg;
@@ -33,6 +40,7 @@ export function Todo() {
     }
   };
 
+  // dekstop header
   const setDesktopBgFunction = () => {
     if (screenModeState === "light") {
       return bg.lightDeskBg;
@@ -42,6 +50,7 @@ export function Todo() {
     }
   };
 
+  // toggle the theme/mode of screen
   const toggleScreenMode = () => {
     screenModeState === "light"
       ? setScreenModeState("dark")
@@ -52,26 +61,100 @@ export function Todo() {
     setInputData(event.target.value);
   };
 
+  // add task on "Enter"
+  const handleKeyPress = (e:React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === "Enter")
+      addTask();
+  }
+
+  // to add a task in todo list
   const addTask = () => {
+
     if (inputData !== "") {
-      setTodoList((todoarr) => [...todoarr, inputData]);
+
+      const newTask: list = {
+        id: Date.now(),
+        text: inputData,
+        completed: false
+      };
+
+      setTodoList([...todoList, newTask]);
+
+      console.log(newTask.id);
+
       setInputData("");
       setCheck(true);
-      console.log("checked");
       return todoList;
     } else {
       alert("Please enter some value");
     }
   };
 
-  const isTaskCompleted = () => {
-      setisCompletedTask(!isCompletedTask)
+  // when task is completed
+  const completeTask = (taskId: number) => {
 
+    todoList.map((task) => {
+      if(task.id === taskId){
+        task.completed = !task.completed;
+        setisCompletedTask(!isCompletedTask)
+       console.log("I am task ID ",task.id)
+       console.log(task.completed)
+      }
+    })
+    
+  };
+
+  // remove task
+  const removeTask = (taskId:number) => {
+    todoList.map((task) => {
+      if(task.id === taskId){
+        setTodoList((prevTodoList) =>
+      prevTodoList.filter((task) => task.id !== taskId));
+      }})
+  }
+
+  // incomplete task count
+  const incompleteTaskCount = todoList.filter((task) => !task.completed).length;
+
+  // function to filter Completed tasks
+  const filterCompletedTodoList = () => {
+    todoList.map((task) => {
+      if(task.completed){
+        setTodoList((prevTodoList) => 
+        prevTodoList.filter((task) => task.completed))
+        console.log("Completed")
+      }
+    })
+  } 
+
+  // function to filter Completed tasks
+  const filterActiveTodoList = () => {
+    todoList.map((task) => {
+      if(!task.completed){
+        setTodoList((prevTodoList) => 
+        prevTodoList.filter((task) => !task.completed))
+        console.log("active")
+      }
+    })
+  } 
+      
+  // function to clear completed tasks
+  const clearCompletedTodoList = () => {
+    todoList.map((task) => {
+      if(!task.completed)
+      {
+        setTodoList((prevTodoList) =>
+        prevTodoList.filter((task) => !task.completed))
+        console.log("Active")
+      }
+    })
   }
 
   useEffect(() => {
+    const arr = todoList; 
+    setTodoList(arr);
     setCheck(false);
-  }, [check]);
+  }, [isCompletedTask, check, ]);
 
   return (
     <div
@@ -144,6 +227,7 @@ export function Todo() {
               value={inputData}
               autoComplete="off"
               onChange={handleChange}
+              onKeyDown={handleKeyPress}
               className={`w-full focus:outline-none ${
                 screenModeState === "dark"
                   ? "bg-lightdark text-lightgrayishblue "
@@ -153,7 +237,7 @@ export function Todo() {
           </div>
           <div
             className={`list-of-todo flex flex-col justify-center items-center rounded-lg divide-y w-full shadow-lg ${
-              screenModeState === "dark" ? "divide-current" : "divide-gray-200"
+              screenModeState === "dark" ? "divide-gray-900" : "divide-gray-200"
             } ${
               screenModeState === "dark"
                 ? "bg-lightdark text-lightgrayishblue "
@@ -162,30 +246,41 @@ export function Todo() {
           >
             {todoList.map((todoEl, index) => {
               return (
-                <div className="todoList flex justify-start items-center space-x-4 p-3 w-full font-normal border-verylightgray" key={index}>
+                <div
+                  className="todoList flex justify-between items-center space-x-4 p-3 w-full font-normal border-verylightgray"
+                  key={index}
+                >
+                  <div className="flex justify-between space-x-4 items-center">
                   <div
                     className={`flex justify-center items-center rounded-full border w-5 h-5 cursor-pointer ${
-                      isCompletedTask === true ? "bg-green-400" : ""
+                      todoEl.completed === true ? "bg-green-400" : ""
                     }`}
-                    onClick={isTaskCompleted}
+                    onClick={() => completeTask(todoEl.id)}
                   >
                     <Image
                       src="/icon-check.svg"
                       alt="check-icon"
                       width={11}
                       height={9}
-                      className={`${isCompletedTask === true ? "block" : "hidden"}`}
+                      className={`${
+                        todoEl.completed === true ? "block" : "hidden"
+                      }`}
                     />
                   </div>
                   <p
-                    className={`${
+                    className={` cursor-pointer ${
                       screenModeState === "dark"
                         ? " text-lightgrayishblue "
                         : " text-darkgrayishblue"
+                    } ${
+                      todoEl.completed === true ? `line-through ${screenModeState === "dark" ? "text-gray-900" : "text-gray-300"}`: ""
                     }`}
                   >
-                    {todoEl}
+                    {todoEl.text}
                   </p>
+
+                  </div>
+                  <MdCancel className="cursor-pointer" onClick={() => removeTask(todoEl.id)} />
                 </div>
               );
             })}
@@ -194,25 +289,40 @@ export function Todo() {
                 todoList.length === 0 ? "hidden" : "flex"
               }`}
             >
-              <p>{todoList.length} items left</p>
+              <p>{incompleteTaskCount} items left</p>
+              {/* for desktop view */}
               <div className="hidden md:flex justify-between items-center space-x-2 text-base font-semibold">
-                <button className="hover:text-blue-700 active:text-blue-700">All</button>
-                <button className="hover:text-blue-700 active:text-blue-700">Active</button>
-                <button className="hover:text-blue-700 active:text-blue-700">Completed</button>
+                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} >
+                  All
+                </button>
+                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} onClick={filterActiveTodoList} >
+                  Active
+                </button>
+                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} onClick={filterCompletedTodoList}>
+                  Completed
+                </button>
               </div>
-              <button>Clear Completed</button>
+              <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'}`}  onClick={clearCompletedTodoList}>Clear Completed</button>
             </div>
           </div>
-          <div
+         <div className="end-of-taks flex flex-col items-center justify-center space-y-4 w-full">
+          {/* for mobile view */}
+         <div
             className={`flex md:hidden justify-between rounded-lg w-full items-center shadow-lg p-3 space-x-2 text-base font-semibold ${
               screenModeState === "dark"
                 ? "bg-lightdark text-lightgrayishblue "
                 : "bg-white text-darkgrayishblue"
             } ${todoList.length === 0 ? "hidden" : "flex"}`}
           >
-            <button className="hover:text-blue-700 active:text-blue-700">All</button>
-            <button className="hover:text-blue-700 active:text-blue-700">Active</button>
-            <button className="hover:text-blue-700 active:text-blue-700">Completed</button>
+            <button className="hover:text-blue-800 active:text-blue-700">
+              All
+            </button>
+            <button className="hover:text-blue-800 active:text-blue-700" onClick={filterActiveTodoList}>
+              Active
+            </button>
+            <button className="hover:text-blue-800 active:text-blue-700" onClick={filterCompletedTodoList}>
+              Completed
+            </button>
           </div>
           <p
             className={`text-xs text-gray-600 font-medium ${
@@ -221,6 +331,7 @@ export function Todo() {
           >
             Drag and drop to reorder list
           </p>
+         </div>
         </div>
       </div>
     </div>
