@@ -3,8 +3,13 @@ import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 import { MdCancel } from "react-icons/md";
 import { Fragment, useEffect, useState } from "react";
+import { createContext, useContext } from 'react';
 
-export function Todo() {
+
+// export const ThemeContext = createContext(screenModeState);
+
+export default function Todo() {
+
   const [screenModeState, setScreenModeState] = useState<"dark" | "light">(
     "light"
   );
@@ -97,8 +102,6 @@ export function Todo() {
       if(task.id === taskId){
         task.completed = !task.completed;
         setisCompletedTask(!isCompletedTask)
-       console.log("I am task ID ",task.id)
-       console.log(task.completed)
       }
     })
     
@@ -122,7 +125,6 @@ export function Todo() {
       if(task.completed){
         setTodoList((prevTodoList) => 
         prevTodoList.filter((task) => task.completed))
-        console.log("Completed")
       }
     })
   } 
@@ -158,17 +160,17 @@ export function Todo() {
 
   return (
     <div
-      className={`container relative flex flex-col w-screen h-screen ${
+      className={`container relative  flex flex-col min-w-max h-screen overflow-auto ${
         screenModeState === "dark" ? "bg-dark" : "bg-white"
       }`}
     >
-      <div className="header">
+      <div className="header flex">
         {/* Mobile Image */}
         <Image
           src={setMobileBgFunction()}
           alt=""
-          width={12000}
-          height={1200}
+          width={425}
+          height={200}
           priority
           className="block md:hidden"
         />
@@ -176,8 +178,9 @@ export function Todo() {
         <Image
           src={setDesktopBgFunction()}
           alt=""
-          width={12000}
-          height={1200}
+          width={1440}
+          height={300}
+          layout="intrinsic"
           priority
           className="hidden md:block"
         />
