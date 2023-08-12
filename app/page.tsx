@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export default function Home() {
   return (
-    <div className='container bg-red-700'>
+    <div className='h-full '>
       <Todo />
     
     </div>

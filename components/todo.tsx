@@ -160,7 +160,7 @@ export default function Todo() {
 
   return (
     <div
-      className={`container relative  flex flex-col min-w-max h-screen overflow-auto ${
+      className={`container relative  flex flex-col min-w-max min-h-screen overflow-auto ${
         screenModeState === "dark" ? "bg-dark" : "bg-white"
       }`}
     >
@@ -185,7 +185,7 @@ export default function Todo() {
           className="hidden md:block"
         />
       </div>
-      <div className="todo-tab flex flex-col absolute justify-center items-center p-3 mt-6 w-full">
+      <div className="todo-tab flex flex-col absolute  justify-center items-center p-3 mt-6 w-full">
         <div className="flex flex-col  justify-center items-center p-3 w-11/12 gap-6 md:gap-4 md:w-1/2">
           <div className="title flex justify-between items-center w-full">
             <h1 className="font-bold text-white text-3xl tracking-widest">
