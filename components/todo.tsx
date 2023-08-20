@@ -309,13 +309,6 @@ export default function Todo() {
                 Completed
               </button>
             </div>
-            <p
-              className={`text-xs text-gray-600 font-medium ${
-                todoList.length <= 2 ? "hidden" : "flex"
-              }`}
-            >
-              Drag and drop to reorder list
-            </p>
           </div>
         </div>
       </div>
