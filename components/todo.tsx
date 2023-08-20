@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MdCancel } from "react-icons/md";
+import { TiPlus } from "react-icons/ti";
 import { useState } from "react";
 
 export default function Todo() {
@@ -112,7 +113,7 @@ export default function Todo() {
             />
           </div>
           <div
-            className={`flex justify-start space-x-4 items-center py-3 px-3 rounded w-full font-normal border-verylightgray ${
+            className={`flex justify-end space-x-4 items-center py-3 px-3 rounded w-full font-normal border-verylightgray ${
               isDarkMode
                 ? "bg-lightdark text-lightgrayishblue "
                 : "bg-white text-darkgrayishblue"
@@ -137,9 +138,9 @@ export default function Todo() {
 
             <button
               onClick={addTask}
-              className="border-gray-300 w-1/2 bg-indigo-600 text-white px-4 py-1 rounded-md hover:bg-indigo-700 disabled:cursor-not-allowed cursor-pointer"
+              className="px-4 py-1 rounded-full disabled:cursor-not-allowed cursor-pointer"
             >
-              Add task
+               <TiPlus />
             </button>
           </div>
           <div
