@@ -24,6 +24,8 @@ export default function Todo() {
     completed: boolean
   }
 
+  const [ filterTodoList, setFilterTodoList ] = useState<list[]>(todoList)
+
   const [check, setCheck] = useState<boolean>(false);
 
   const [isCompletedTask, setisCompletedTask] = useState<boolean>(false);
@@ -82,14 +84,17 @@ export default function Todo() {
         text: inputData,
         completed: false
       };
+      console.log(inputData);
 
-      setTodoList([...todoList, newTask]);
-
+      setTodoList(prevTodoList => [...prevTodoList, newTask]);
+      setFilterTodoList(todoList)
+      console.log(filterTodoList)
       console.log(newTask.id);
+      console.log(todoList)
 
       setInputData("");
       setCheck(true);
-      return todoList;
+      return filterTodoList;
     } else {
       alert("Please enter some value");
     }
@@ -97,11 +102,11 @@ export default function Todo() {
 
   // when task is completed
   const completeTask = (taskId: number) => {
-
     todoList.map((task) => {
       if(task.id === taskId){
         task.completed = !task.completed;
         setisCompletedTask(!isCompletedTask)
+        
       }
     })
     
@@ -117,46 +122,52 @@ export default function Todo() {
   }
 
   // incomplete task count
-  const incompleteTaskCount = todoList.filter((task) => !task.completed).length;
+  const incompleteTaskCount = filterTodoList.filter((task) => !task.completed).length;
 
   // function to filter Completed tasks
-  const filterCompletedTodoList = () => {
-    todoList.map((task) => {
+  const filterCompletedTodoList = (arr:list[]) => {
+    setFilterTodoList(arr)
+    console.log("starting completetd",filterTodoList)
+    filterTodoList.map((task) => {
       if(task.completed){
-        setTodoList((prevTodoList) => 
-        prevTodoList.filter((task) => task.completed))
+        setFilterTodoList((filterTodoList) => 
+        filterTodoList.filter((task) => task.completed))
       }
     })
+    console.log("completed")
+    console.log(filterTodoList)
+    return filterTodoList
   } 
 
-  // function to filter Completed tasks
-  const filterActiveTodoList = () => {
-    todoList.map((task) => {
+  // function to filter ACtive tasks
+  const filterActiveTodoList = (arr:list[]) => {
+    setFilterTodoList(arr)
+    console.log("starting active",filterTodoList)
+    filterTodoList.map((task) => {
       if(!task.completed){
-        setTodoList((prevTodoList) => 
-        prevTodoList.filter((task) => !task.completed))
-        console.log("active")
+        setFilterTodoList((filterTodoList) => 
+        filterTodoList.filter((task) => !task.completed))
       }
     })
+    console.log("active")
+    console.log(filterTodoList)
+    return filterTodoList
   } 
       
   // function to clear completed tasks
   const clearCompletedTodoList = () => {
-    todoList.map((task) => {
+    filterTodoList.map((task) => {
       if(!task.completed)
       {
-        setTodoList((prevTodoList) =>
-        prevTodoList.filter((task) => !task.completed))
-        console.log("Active")
+        setFilterTodoList((prevFilterTodoList) =>
+        prevFilterTodoList.filter((task) => !task.completed))
       }
     })
   }
 
   useEffect(() => {
-    const arr = todoList; 
-    setTodoList(arr);
     setCheck(false);
-  }, [isCompletedTask, check, ]);
+  }, [isCompletedTask, check]);
 
   return (
     <div
@@ -247,7 +258,7 @@ export default function Todo() {
                 : "bg-white text-darkgrayishblue"
             }`}
           >
-            {todoList.map((todoEl, index) => {
+            {filterTodoList.map((todoEl, index) => {
               return (
                 <div
                   className="todoList flex justify-between items-center space-x-4 p-3 w-full font-normal border-verylightgray"
@@ -289,19 +300,19 @@ export default function Todo() {
             })}
             <div
               className={`flex justify-between items-center w-full space-x-4 p-3 text-gray-600 text-sm font-medium ${
-                todoList.length === 0 ? "hidden" : "flex"
+                filterTodoList.length === 0 ? "hidden" : "flex"
               }`}
             >
               <p>{incompleteTaskCount} items left</p>
               {/* for desktop view */}
               <div className="hidden md:flex justify-between items-center space-x-2 text-base font-semibold">
-                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} >
+                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} onClick={() => setFilterTodoList(todoList)}>
                   All
                 </button>
-                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} onClick={filterActiveTodoList} >
+                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} onClick={() => filterActiveTodoList(todoList)} >
                   Active
                 </button>
-                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} onClick={filterCompletedTodoList}>
+                <button className={`${screenModeState === "dark" ? 'md:hover:text-white' : 'md:hover:text-black'} active:text-blue-700`} onClick={() => filterCompletedTodoList(todoList)}>
                   Completed
                 </button>
               </div>
@@ -315,21 +326,21 @@ export default function Todo() {
               screenModeState === "dark"
                 ? "bg-lightdark text-lightgrayishblue "
                 : "bg-white text-darkgrayishblue"
-            } ${todoList.length === 0 ? "hidden" : "flex"}`}
+            } ${filterTodoList.length === 0 ? "hidden" : "flex"}`}
           >
-            <button className="hover:text-blue-800 active:text-blue-700">
+            <button className="hover:text-blue-800 active:text-blue-700" onClick={() => setFilterTodoList(todoList)}>
               All
             </button>
-            <button className="hover:text-blue-800 active:text-blue-700" onClick={filterActiveTodoList}>
+            <button className="hover:text-blue-800 active:text-blue-700" onClick={() => filterActiveTodoList(todoList)}>
               Active
             </button>
-            <button className="hover:text-blue-800 active:text-blue-700" onClick={filterCompletedTodoList}>
+            <button className="hover:text-blue-800 active:text-blue-700" onClick={() => filterCompletedTodoList(todoList)}>
               Completed
             </button>
           </div>
           <p
             className={`text-xs text-gray-600 font-medium ${
-              todoList.length <= 2 ? "hidden" : "flex"
+              filterTodoList.length <= 2 ? "hidden" : "flex"
             }`}
           >
             Drag and drop to reorder list
