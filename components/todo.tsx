@@ -72,7 +72,7 @@ export default function Todo() {
   return (
     <div
       className={`container relative  flex flex-col min-w-max min-h-screen overflow-auto ${
-        isDarkMode ? "bg-white" : "bg-dark"
+        isDarkMode ? "bg-dark" : "bg-white"
       }`}
     >
       <div className="header flex">
@@ -114,8 +114,8 @@ export default function Todo() {
           <div
             className={`flex justify-start space-x-4 items-center py-3 px-3 rounded w-full font-normal border-verylightgray ${
               isDarkMode
-                ? "bg-white text-darkgrayishblue"
-                : "bg-lightdark text-lightgrayishblue "
+                ? "bg-lightdark text-lightgrayishblue "
+                : "bg-white text-darkgrayishblue"
             }`}
           >
             <input
@@ -130,8 +130,8 @@ export default function Todo() {
               }}
               className={`w-full focus:outline-none ${
                 isDarkMode
-                  ? "bg-white text-darkgrayishblue"
-                  : "bg-lightdark text-lightgrayishblue "
+                  ? "bg-lightdark text-lightgrayishblue "
+                  : "bg-white text-darkgrayishblue"
               }`}
             />
 
@@ -144,11 +144,11 @@ export default function Todo() {
           </div>
           <div
             className={`list-of-todo flex flex-col justify-center items-center rounded-lg divide-y w-full shadow-lg ${
-              isDarkMode ? "divide-gray-200" : "divide-gray-900"
+              isDarkMode ? "divide-gray-900" : "divide-gray-200"
             } ${
               isDarkMode
-                ? "bg-white text-darkgrayishblue"
-                : "bg-lightdark text-lightgrayishblue "
+                ? "bg-lightdark text-lightgrayishblue"
+                : " bg-white text-darkgrayishblue"
             }`}
           >
             {todoList
@@ -210,12 +210,12 @@ export default function Todo() {
                       <p
                         className={` cursor-pointer ${
                           isDarkMode
-                            ? " text-darkgrayishblue"
-                            : " text-lightgrayishblue "
+                            ? "text-lightgrayishblue "
+                            : "  text-darkgrayishblue"
                         } ${
                           todoEl.isCompleted === true
                             ? `line-through ${
-                                isDarkMode ? "text-gray-300" : "text-gray-900"
+                                isDarkMode ? "text-gray-700" : "text-gray-300"
                               }`
                             : ""
                         }`}
